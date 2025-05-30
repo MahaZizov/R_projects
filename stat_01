@@ -1,19 +1,125 @@
-'''install.packages("palmerpenguins")
-install.packages("ggthemes")
-install.packages("tidyverse")'''
+#install.packages("palmerpenguins")
+#install.packages("ggthemes")
+#install.packages("tidyverse")'''
 library(palmerpenguins)
 library(ggthemes)
 library(tidyverse)
 
 View(penguins)
-'''ggplot aesthetic mappings are defined at the global level, to avoid 
-applying them to all layers, we can define them at the layer level.==> in our example 
-in geom_point > only for the dots, not for the line.'''
+#ggplot aesthetic mappings are defined at the global level, to avoid 
+#applying them to all layers, we can define them at the layer level.==> in our example 
+#in geom_point > only for the dots, not for the line
 # Scatter plot of flipper length vs body mass with species as color
-ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g)) +
-  geom_point(mapping = aes(color = species, shape = species)) +
-  geom_smooth(method = "lm") #added a new layer with geo_smooth() + a linear model (method = "lm")
-# The geom_smooth() function adds a smoothed line to the scatter plot, which can help visualize the trend in the data.
 
+print(
+    ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g)) +
+    geom_point(mapping = aes(color = species, shape = species)) +
+    geom_smooth(method = "lm") +
+    labs(
+        title = "Body mass and flipper lengths",
+        subtitle ="Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+        x = "Flipper length (mm)",
+        y = "Body mass (g)",
+        color = "Species", shape = "Species") +
+    scale_color_colorblind() # Colorblind-friendly palette"
+)
+
+?penguins
+print(
+    ggplot(data = penguins, mapping = aes(x = bill_length_mm, y = bill_depth_mm)) +
+    geom_point(mapping = aes(color = species))
+) #relationship between the 2 variables very weak 
+
+print(
+    ggplot(data = penguins, mapping = aes(x = bill_depth_mm, y = species)) +
+    geom_point(mapping = aes(color = species))
+)
+#using na.rm = TRUE:
+print(
+    ggplot(data = penguins, mapping = aes(x = bill_length_mm, y = bill_depth_mm)) +
+    geom_point(mapping = aes(color = species), na.rm = TRUE) +
+    labs(
+        title = "Data come from the palmerpenguins package")
+)
+
+#below use loess instead of lm to get a smoother line
+print(
+  ggplot(data = penguins,
+         mapping = aes(x = flipper_length_mm, y = body_mass_g)) +
+    geom_point(aes(color = bill_depth_mm)) +
+    geom_smooth(method = "loess", se = FALSE, color = "black") +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    scale_color_gradient(low = "black", high = "skyblue")
+)
+
+#theme_minimal() #cleaner background
+
+print(
+  ggplot(data = penguins, 
+         mapping = aes(x = flipper_length_mm, y = body_mass_g, color = island)) +
+    geom_point() +
+    geom_smooth(se = FALSE)
+)
+
+#BAR Chart
+
+print(
+    ggplot(penguins, aes(x = species)) +
+    geom_bar()
+)
+
+#transform the variable species into a factor
+print(
+ggplot(penguins, aes(x = fct_infreq(species))) +
+geom_bar()
+)
+
+#Histogram for dist of continuous variable
+print(
+    ggplot(penguins, aes(x = body_mass_g)) +
+    geom_histogram(binwidth = 200)
+)
+
+#binwidth 20 is too narrow
+#Histogram for dist of continuous variable
+print(
+    ggplot(penguins, aes(x = body_mass_g)) +
+    geom_histogram(binwidth = 2)
+)
+
+
+#Histogram for dist of continuous variable
+print(
+    ggplot(penguins, aes(x = body_mass_g)) +
+    geom_histogram(binwidth = 200)
+)
+
+#density plot great to see skewness and modes 
+print(
+    ggplot(penguins, aes(x = body_mass_g)) +
+    geom_density()
+)
+
+#Exercises:
+print(
+    ggplot(penguins, aes(y = fct_infreq(species))) +
+    geom_bar()
+)
+
+print(
+    ggplot(penguins, aes(x = species)) +
+    geom_bar(color = "red")
+) #bar chart with red border
+
+print(
+    ggplot(penguins, aes(x = species)) +
+    geom_bar(fill = "red")
+) #bar chart with red fill
+
+view(diamonds)
+print(
+    ggplot(diamonds, aes(x = carat)) +
+    geom_histogram(binwidth = 0.1, fill = "blue", color = "black")
+) #0.1 is a good binwidth for carat
 
 
